@@ -9,7 +9,7 @@ package com.saesompark.designpattern.observer;
 //단톡방 구현하기 - 새로운 대화가 있을 경우 알ㄹ려줌
 public interface Observer {
 	
-	public void update(String msg);
+	public void update();
 	// 옵저버를 제공하는 서버 측에서 변경사항이 있을 경우 호출하는 함수
 	 
 	

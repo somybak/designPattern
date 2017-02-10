@@ -23,9 +23,13 @@ public class Student implements Observer {
 	List<String> messages = new ArrayList<>();
 	
 	@Override
-	public void update(String msg) {
+	public void update() {
 		// TODO Auto-generated method stub
-		// String msg = server.data;
+		
+		// 업데이트가 일어나면 바라보고 있던 서버의 데이터를 반영한다
+		String msg = server.data; // data는 sendMessage에서 이미 서버의 data에 담겼음
+		// 이 서버의 메시지를 가져오는(반영하는) 형태
+		
 		messages.add(msg);
 		showMessage();
 		

@@ -150,7 +150,9 @@ public class MainDesignPattern {
 		Student achim = new Student(server, "Achim");
 		Student somy = new Student(server, "Saesom");
 		
-		somy.addMessage("악");
+		// 8.2 서버를 통해 공지를 띄운다
+		server.sendMessage("한시간만 있으면 점심시간입니다. 힘냅시다~~");
+		//somy.addMessage("악");
 		
 		}
 }
