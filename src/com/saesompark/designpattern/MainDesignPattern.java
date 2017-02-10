@@ -1,5 +1,7 @@
 package com.saesompark.designpattern;
 
+import com.saesompark.designpattern.observer.Student;
+import com.saesompark.designpattern.observer.WhatsappServer;
 import com.saesompark.designpattern.proxy.Bbs;
 import com.saesompark.designpattern.proxy.Proxy;
 import com.saesompark.designpattern.singleton.Multiton;
@@ -10,14 +12,20 @@ import com.saesompark.factorymethod.FactoryMethod;
 import com.saesompark.factorymethod.Packed;
 import com.saesompark.factorymethod.Product;
 import com.saesompark.factorymethod.TVfactory;
+import com.saesompark.strategy.Soldier;
+import com.saesompark.strategy.Strategy;
+import com.saesompark.strategy.StrategySheild;
+import com.saesompark.strategy.StrategySword;
 
 public class MainDesignPattern {
+	
+	
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		// 싱글턴으로는 인스턴스를 계속 생성하지 않아도 됨. 라기보단 강제로 new를 한개만 하게함
 		// 데이터를 계속 재사용! 객체를 공유함으로써 클래스를 공유
-		// single, single1에서는 Single 클래스를 참조. 하나가 바꾸면 다 바뀜. 
+		// single, single1에서는 Single 클래스를 참조. 하나가 바꾸면 다 바.뀜. 
 		
 		// 객체의 new를 한번만 하게 하려고 나온게 싱글턴!!
 		
@@ -57,11 +65,92 @@ public class MainDesignPattern {
 		TempletMethod frog = new Frog();
 		frog.play();
 			
-		//6. TV 공장 만들기 
+		//6. TV 공장 만들기  - 팩토리 패턴
 		FactoryMethod factory = new TVfactory();
 		Product product = factory.make();
 		Packed packed = factory.pack(product);
 		
-	}
-
+		//7. 전략 패턴 사용. 클라이언트가 Main
+		Strategy strategy = null;
+		Soldier context = new Soldier();
+		
+		//클라이언트가 전략선택을 위해 상태를 변경
+		context.status = Soldier.NEAR;
+		
+		//"적이 근접거리에 있다면"
+		if(context.status == Soldier.ATTACKED){
+			strategy = new StrategySword();
+		}else{
+			strategy = new StrategySheild();
+		}
+		
+		//전략을 컨텍스트에 넘겨서 사용한다
+		context.useStrategy(strategy);
+		
+		
+		//8. 전략 call back 패턴 사용하기
+		// 전략패턴과 동일한데 전략 자체를 클라이언트에서 익명객체로 생성한다.
+		Strategy strategy2 = null;
+		Soldier context2 = new Soldier();
+		
+		context2.status = Soldier.ATTACKED; // => 숫자값 2가 들어감
+		
+		
+		// 전략 콜백은 수현체를 사용하지 않고 익명객체를 코드상에서 구현해준다.
+		switch (context2.status){
+		case Soldier.ATTACKED: // 2라고 써도됨. 협업을 위해선 숫자보단 직접쓰는게 좋음.
+			context2.useStrategy( // 콜백을 위해서 현재 실행하고 있는 것
+				//익명객체란?
+				//변수가 없이 instance가 생성되는 것을 가르킨다
+				//아래와 같이 변수를 지정하지 않고 바로 초기화할 수 있지만
+				// 초기화된 곳 이외에서는 사용할 수 없다.
+				
+				new Strategy(){ // 익명객체
+		
+					@Override
+					public void runStrategy() { //call back 부분
+						useShield();
+						System.out.println("휘두른다");
+					}
+	
+					private void useShield(){
+						
+						System.out.println("숨을 가다듬고");
+					}
+				}
+			);
+				break;
+				
+//		case Soldier.FAR:
+//			context2.useStrategy(
+//				new Strategy(){
+//					@Override
+//					public void runStrategy() {
+//						 useShield();
+//					}
+//				}
+//			);
+//			break;
+			
+		default:
+			context2.useStrategy(new Strategy(){
+				@Override
+				public void runStrategy() {
+					// TODO Auto-generated method stub
+					System.out.println("막는다");
+				}
+				});
+			}
+		
+		//9.옵저버 사용하기
+		//옵저버를 사용하기 위해서는 서버가 먼저 생성되어야
+		WhatsappServer server = new WhatsappServer();
+			
+		Student luz = new Student(server, "Luz");
+		Student achim = new Student(server, "Achim");
+		Student somy = new Student(server, "Saesom");
+		
+		somy.addMessage("악");
+		
+		}
 }
